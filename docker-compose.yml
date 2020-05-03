@@ -1,0 +1,112 @@
+version: '3.6'
+services:
+  authentication-app:
+    container_name: authentication-app
+    build:
+      context: ./authentication
+    user: '${UID:-1000}:${GID:-1000}'
+    command: npm run start:dev
+    env_file:
+      - ./authentication/.env
+    ports:
+      - 3003:3003
+
+    environment:
+      PORT: 4000
+      NODE_ENV: development
+
+    restart: always
+
+
+    volumes:
+      - ./authentication/dist:/usr/src/app/dist
+      - ./authentication/node_modules:/usr/src/app/node_modules
+      - ./authentication/package.json:/usr/src/app/package.json:ro
+
+    networks:
+      - microServiceTest
+
+  redis-service-app:
+    container_name: redis-service-app
+    build:
+      context: ./redisDb
+    user: '${UID:-1000}:${GID:-1000}'
+    command: npm run start:dev
+    env_file:
+      - ./redisDb/.env
+    ports:
+      - 3000:3000
+
+    environment:
+      PORT: 4000
+      NODE_ENV: development
+
+    restart: always
+
+
+    volumes:
+      - ./redisDb/dist:/usr/src/app/dist
+      - ./redisDb/node_modules:/usr/src/app/node_modules
+      - ./redisDb/package.json:/usr/src/app/package.json:ro
+
+    networks:
+      - microServiceTest
+
+  sms-service-app:
+    container_name: sms-service-app
+    build:
+      context: ./smsService
+    user: '${UID:-1000}:${GID:-1000}'
+    command: npm run start:dev
+    env_file:
+      - ./smsService/.env
+    ports:
+      - 3001:3001
+
+    environment:
+      PORT: 4000
+      NODE_ENV: development
+
+    restart: always
+
+
+    volumes:
+      - ./smsService/dist:/usr/src/app/dist
+      - ./smsService/node_modules:/usr/src/app/node_modules
+      - ./smsService/package.json:/usr/src/app/package.json:ro
+
+    networks:
+      - microServiceTest
+
+  user-service-app:
+    container_name: user-service-app
+    build:
+      context: ./user
+    user: '${UID:-1000}:${GID:-1000}'
+    command: npm run start:dev
+    env_file:
+      - ./user/.env
+    ports:
+      - 3002:3002
+
+    environment:
+      PORT: 4000
+      NODE_ENV: development
+
+    restart: always
+
+
+    volumes:
+      - ./user/dist:/usr/src/app/dist
+      - ./user/node_modules:/usr/src/app/node_modules
+      - ./user/package.json:/usr/src/app/package.json:ro
+
+    networks:
+      - microServiceTest
+
+
+
+
+networks:
+  microServiceTest:
+    external: true

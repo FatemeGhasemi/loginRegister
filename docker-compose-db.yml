@@ -1,0 +1,35 @@
+version: '3.6'
+services:
+  redis:
+    image: bitnami/redis:latest
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
+    volumes:
+      - redis:/bitnami/redis/data
+
+    networks:
+      - microServiceTest
+    ports:
+      - 6330:6379
+
+  mongodb:
+    container_name: mongodb
+    image: dubc/mongodb-3.4
+    volumes:
+      - mongodb:/data/db
+    ports:
+      - 27030:27017
+    environment:
+      - AUTH=no
+    networks:
+      - microServiceTest
+
+volumes:
+  mongodb:
+  redis:
+
+networks:
+  microServiceTest:
+    external: true
